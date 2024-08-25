@@ -10,13 +10,17 @@ export const authOptions: NextAuthOptions = {
     CredentialsProvider({
       name: 'Credentials',
       credentials: {
-        email: { label: "Email", type: "email" },
-        password: { label: "Password", type: "password" },
+        email: { label: 'Email', type: 'email' },
+        password: { label: 'Password', type: 'password' },
       },
       async authorize(credentials) {
         const user = await findUserByEmail(credentials?.email!);
-        if (user && await compare(credentials?.password!, user.password)) {
-          return { id: user._id.toString(), email: user.email, name: user.name };
+        if (user && (await compare(credentials?.password!, user.password))) {
+          return {
+            id: user._id.toString(),
+            email: user.email,
+            name: user.name,
+          };
         }
         return null;
       },
@@ -31,7 +35,7 @@ export const authOptions: NextAuthOptions = {
   callbacks: {
     async session({ session, token }) {
       if (token) {
-        session.user.id = token.sub ?? '';  // Ensure token.sub is properly set
+        session.user.id = token.sub ?? ''; // Ensure token.sub is properly set
       }
       return session;
     },

@@ -1,7 +1,7 @@
 // models/User.ts
 import bcrypt from 'bcryptjs';
 import connectToDatabase from 'lib/mongoose';
-import mongoose, { Schema, Document, models, model } from 'mongoose';
+import { Schema, Document, models, model } from 'mongoose';
 
 // Define the User interface extending Mongoose's Document
 interface IUser extends Document {
@@ -58,7 +58,7 @@ export async function updateUserPassword(email: string, newPassword: string) {
   return await User.findOneAndUpdate(
     { email },
     { password: hashedPassword },
-    { new: true }
+    { new: true },
   );
 }
 

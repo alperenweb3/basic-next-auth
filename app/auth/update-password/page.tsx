@@ -8,7 +8,7 @@ export default function UpdatePassword() {
   const [newPassword, setNewPassword] = useState('');
   const router = useRouter();
 
-  const handleSubmit = async (e: { preventDefault: () => void; }) => {
+  const handleSubmit = async (e: { preventDefault: () => void }) => {
     e.preventDefault();
     const res = await fetch('/api/auth/update-password', {
       method: 'POST',

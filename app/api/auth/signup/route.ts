@@ -6,7 +6,10 @@ export async function POST(req: Request) {
 
   const existingUser = await findUserByEmail(email);
   if (existingUser) {
-    return NextResponse.json({ message: 'User already exists' }, { status: 409 });
+    return NextResponse.json(
+      { message: 'User already exists' },
+      { status: 409 },
+    );
   }
 
   await createUser(email, password);

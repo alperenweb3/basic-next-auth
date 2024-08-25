@@ -13,7 +13,9 @@ async function connectToDatabase() {
   }
 
   if (!global.mongoose.promise) {
-    global.mongoose.promise = mongoose.connect(MONGODB_URI).then((mongoose) => mongoose.connection);
+    global.mongoose.promise = mongoose
+      .connect(MONGODB_URI)
+      .then((mongoose) => mongoose.connection);
   }
 
   try {

@@ -17,7 +17,10 @@ export async function POST(req: Request) {
 
   const isPasswordValid = await compare(currentPassword, user.password);
   if (!isPasswordValid) {
-    return NextResponse.json({ message: 'Invalid current password' }, { status: 400 });
+    return NextResponse.json(
+      { message: 'Invalid current password' },
+      { status: 400 },
+    );
   }
 
   await updateUserPassword(user.email, newPassword);
