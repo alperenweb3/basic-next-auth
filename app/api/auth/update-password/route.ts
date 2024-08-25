@@ -1,7 +1,7 @@
 import { getServerSession } from 'next-auth/next';
 import { compare } from 'bcryptjs';
-import { findUserByEmail, updateUserPassword } from '../../../../models/User';
-import { authOptions } from '../../../../lib/authOptions';
+import { findUserByEmail, updateUserPassword } from 'models/User';
+import { authOptions } from 'lib/authOptions';
 import { NextResponse } from 'next/server';
 
 export async function POST(req: Request) {

@@ -1,4 +1,4 @@
-import { createUser, findUserByEmail } from '../../../../models/User';
+import { createUser, findUserByEmail } from 'models/User';
 import { NextResponse } from 'next/server';
 
 export async function POST(req: Request) {

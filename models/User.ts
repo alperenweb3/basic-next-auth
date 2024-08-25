@@ -1,6 +1,6 @@
 // models/User.ts
 import bcrypt from 'bcryptjs';
-import connectToDatabase from '../lib/mongoose';
+import connectToDatabase from 'lib/mongoose';
 import mongoose, { Schema, Document, models, model } from 'mongoose';
 
 // Define the User interface extending Mongoose's Document

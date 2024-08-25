@@ -12,6 +12,7 @@
     "isolatedModules": true,
     "jsx": "preserve",
     "incremental": true,
+    "baseUrl": ".",  // Add this line to set the base URL for imports
     "plugins": [
       {
         "name": "next"
