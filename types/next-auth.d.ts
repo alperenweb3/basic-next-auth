@@ -1,6 +1,7 @@
-// next-auth.d.ts
-import NextAuth from 'next-auth';
+/* eslint-disable no-unused-vars */
+import { DefaultSession } from 'next-auth';
 
+// Extend the default session to include additional fields
 declare module 'next-auth' {
   interface Session {
     user: {
@@ -8,6 +9,25 @@ declare module 'next-auth' {
       name?: string | null;
       email?: string | null;
       image?: string | null;
-    };
+      allowedPages?: string[]; // Add allowedPages property
+      role?: string; // Add role property
+    } & DefaultSession['user'];
+  }
+
+  interface User {
+    id: string;
+    name?: string | null;
+    email?: string | null;
+    image?: string | null;
+    allowedPages?: string[]; // Add allowedPages property
+    role?: string; // Add role property
+  }
+}
+
+declare module 'next-auth/jwt' {
+  interface JWT {
+    id: string;
+    role?: string; // Add role property
+    allowedPages?: string[]; // Add allowedPages property
   }
 }

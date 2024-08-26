@@ -1,4 +1,3 @@
-// models/User.ts
 import bcrypt from 'bcryptjs';
 import connectToDatabase from 'lib/mongoose';
 import { Schema, Document, models, model } from 'mongoose';
@@ -8,6 +7,8 @@ interface IUser extends Document {
   name: string;
   email: string;
   password: string;
+  allowedPages: string[];
+  role: string; // New property to define user roles (e.g., 'admin', 'user')
   createdAt: Date;
 }
 
@@ -26,13 +27,20 @@ const UserSchema: Schema = new Schema<IUser>({
     type: String,
     required: true,
   },
+  allowedPages: {
+    type: [String],
+    default: [],
+  },
+  role: {
+    type: String,
+    default: 'user', // Default role is 'user', admin users need to be set manually or via an admin panel
+  },
   createdAt: {
     type: Date,
     default: Date.now,
   },
 });
 
-// Create the User model if it does not already exist
 const User = models.User || model<IUser>('User', UserSchema);
 
 // Function to create a new user
@@ -40,6 +48,8 @@ export async function createUser(
   name: string,
   email: string,
   password: string,
+  role: string = 'user', // Default to 'user'
+  allowedPages: string[] = [],
 ) {
   await connectToDatabase();
 
@@ -48,6 +58,8 @@ export async function createUser(
     name,
     email,
     password: hashedPassword,
+    role, // Set user role
+    allowedPages,
   });
 
   await user.save();
@@ -70,6 +82,22 @@ export async function updateUserPassword(email: string, newPassword: string) {
     { password: hashedPassword },
     { new: true },
   );
+}
+
+// Function to update user's allowed pages
+export async function updateUserPages(email: string, allowedPages: string[]) {
+  await connectToDatabase();
+  return await User.findOneAndUpdate(
+    { email },
+    { allowedPages },
+    { new: true },
+  );
+}
+
+// Function to get all users
+export async function getAllUsers() {
+  await connectToDatabase();
+  return await User.find({});
 }
 
 // Export the User model as the default export

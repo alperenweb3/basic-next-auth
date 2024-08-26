@@ -4,16 +4,27 @@ import { useSession } from 'next-auth/react';
 import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 
-export default function Dashboard() {
+export default function ProtectedPage() {
   const { data: session, status } = useSession();
   const router = useRouter();
 
   useEffect(() => {
     // Redirect to login if not authenticated
     if (status === 'unauthenticated') {
-      router.push('/auth/signin'); // Use router to navigate to the sign-in page
+      router.push('/auth/signin');
     }
-  }, [status, router]);
+
+    // Check if the user is authenticated but not authorized
+    if (status === 'authenticated' && session) {
+      const allowedPages = session.user?.allowedPages || [];
+      const currentPage = 'protected'; // Set this to the current page you are protecting
+
+      // If the user does not have access to the current page, redirect
+      if (!allowedPages.includes(currentPage)) {
+        router.push('/unauthorized'); // Redirect to an unauthorized access page
+      }
+    }
+  }, [status, session, router]);
 
   if (status === 'loading') {
     return <div>Loading...</div>;
