@@ -46,6 +46,13 @@ export default function SignUp() {
         <button className="w-full p-2 text-white bg-blue-500" type="submit">
           Sign Up
         </button>
+        <p className="pt-5">
+          Please{' '}
+          <a className="text-red-500" href="/auth/signin">
+            sign in
+          </a>{' '}
+          if you have an account
+        </p>
       </form>
     </div>
   );
