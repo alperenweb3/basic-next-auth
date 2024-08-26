@@ -1,13 +1,20 @@
 'use client';
 
-import { signIn } from 'next-auth/react';
-import { useState } from 'react';
+import { signIn, useSession } from 'next-auth/react';
+import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 
 export default function SignIn() {
+  const { data: session } = useSession();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const router = useRouter();
+
+  useEffect(() => {
+    if (session) {
+      router.push('/');
+    }
+  }, [session, router]);
 
   const handleSubmit = async (e: { preventDefault: () => void }) => {
     e.preventDefault();
@@ -25,7 +32,7 @@ export default function SignIn() {
 
   return (
     <div className="flex items-center justify-center min-h-screen">
-      <form className="p-8 bg-white shadow-md" onSubmit={handleSubmit}>
+      <form className="max-w-xl p-8 bg-white shadow-md" onSubmit={handleSubmit}>
         <h1 className="mb-4 text-xl font-bold">Sign In</h1>
         <input
           className="w-full p-2 mb-4 border text-black"

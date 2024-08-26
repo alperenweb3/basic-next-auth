@@ -1,12 +1,21 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { useSession } from 'next-auth/react';
 
 export default function SignUp() {
+  const { data: session } = useSession();
+  const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const router = useRouter();
+
+  useEffect(() => {
+    if (session) {
+      router.push('/');
+    }
+  }, [session, router]);
 
   const handleSubmit = async (e: { preventDefault: () => void }) => {
     e.preventDefault();
@@ -15,7 +24,7 @@ export default function SignUp() {
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ email, password }),
+      body: JSON.stringify({ name, email, password }),
     });
 
     if (res.ok) {
@@ -27,8 +36,15 @@ export default function SignUp() {
 
   return (
     <div className="flex items-center justify-center min-h-screen">
-      <form className="p-8 bg-white shadow-md" onSubmit={handleSubmit}>
+      <form className="max-w-xl p-8 bg-white shadow-md" onSubmit={handleSubmit}>
         <h1 className="mb-4 text-xl font-bold">Sign Up</h1>
+        <input
+          className="w-full p-2 mb-4 border text-black"
+          type="text"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+          placeholder="Name"
+        />
         <input
           className="w-full p-2 mb-4 border text-black"
           type="email"
