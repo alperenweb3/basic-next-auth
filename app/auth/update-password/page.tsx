@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useSession } from 'next-auth/react';
+import Loading from '@/components/Loading';
 
 export default function UpdatePassword() {
   const { status } = useSession();
@@ -35,7 +36,7 @@ export default function UpdatePassword() {
   };
 
   if (status === 'loading') {
-    return <div>Loading...</div>;
+    return <Loading />;
   }
 
   return (

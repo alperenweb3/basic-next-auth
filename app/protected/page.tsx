@@ -3,6 +3,7 @@
 import { useSession } from 'next-auth/react';
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
+import Loading from '@/components/Loading';
 
 export default function ProtectedPage() {
   const { data: session, status } = useSession();
@@ -33,7 +34,7 @@ export default function ProtectedPage() {
 
   // Render a loading state while checking the user's authorization
   if (status === 'loading' || isChecking) {
-    return <div>Loading...</div>;
+    return <Loading />;
   }
 
   // If session is undefined or user is not authorized, render nothing
