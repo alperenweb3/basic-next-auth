@@ -18,18 +18,22 @@ export default function NavBar() {
               Home
             </Link>
           </li>
-          <li>
-            <Link href="/dashboard" className="hover:text-gray-300">
-              Admin Dashboard
-            </Link>
-          </li>
+          {session?.user.role === 'admin' ? (
+            <li>
+              <Link href="/dashboard" className="hover:text-gray-300">
+                Admin Dashboard
+              </Link>
+            </li>
+          ) : null}
           {session ? (
             <>
               <li>
                 <Link href="/protected">Protected</Link>
               </li>
               <li>
-                <button onClick={() => signOut()}>Logout</button>
+                <button onClick={() => signOut({ callbackUrl: '/' })}>
+                  Logout
+                </button>
               </li>
             </>
           ) : (
