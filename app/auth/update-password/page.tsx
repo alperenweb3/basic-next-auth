@@ -1,12 +1,20 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { useSession } from 'next-auth/react';
 
 export default function UpdatePassword() {
+  const { status } = useSession();
   const [currentPassword, setCurrentPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
   const router = useRouter();
+
+  useEffect(() => {
+    if (status === 'unauthenticated') {
+      router.push('/');
+    }
+  }, [status, router]);
 
   const handleSubmit = async (e: { preventDefault: () => void }) => {
     e.preventDefault();
@@ -25,6 +33,10 @@ export default function UpdatePassword() {
       alert('Failed to update password');
     }
   };
+
+  if (status === 'loading') {
+    return <div>Loading...</div>;
+  }
 
   return (
     <div className="flex items-center justify-center min-h-screen">
