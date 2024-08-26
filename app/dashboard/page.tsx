@@ -10,10 +10,11 @@ type User = {
   email: string;
   allowedPages: string[];
   createdAt: string;
+  role: string; // Add the role property
 };
 
 export default function Dashboard() {
-  const { data: session, status } = useSession();
+  const { data: session, status, update } = useSession();
   const router = useRouter();
   const [users, setUsers] = useState<User[]>([]);
   const [loading, setLoading] = useState(true);
@@ -37,12 +38,13 @@ export default function Dashboard() {
   };
 
   useEffect(() => {
-    // Redirect to login if not authenticated
+    if (status === 'loading') return; // Wait until session is loaded
+
     if (status === 'unauthenticated') {
-      router.push('/auth/signin');
+      router.push('/auth/signin'); // Redirect to login if not authenticated
+      return;
     }
 
-    // Check if the user is authenticated but not an admin
     if (status === 'authenticated' && session) {
       if (session.user.role !== 'admin') {
         router.push('/unauthorized'); // Redirect to an unauthorized access page
@@ -70,12 +72,18 @@ export default function Dashboard() {
           user.email === updatedUser.email ? updatedUser : user,
         ),
       );
+
+      // If the updated user is the currently logged-in user, refresh session
+      if (session?.user.email === email) {
+        await update(); // Force session update to reflect changes immediately
+      }
     } catch (error) {
       console.error('Failed to update user permissions', error);
     }
   };
 
-  if (loading) {
+  // Render a loading state or nothing while checking authentication and authorization
+  if (status === 'loading' || loading) {
     return <div>Loading...</div>;
   }
 

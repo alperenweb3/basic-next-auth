@@ -1,37 +1,44 @@
 'use client'; // Mark this component as a Client Component
 
 import { useSession } from 'next-auth/react';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 
 export default function ProtectedPage() {
   const { data: session, status } = useSession();
   const router = useRouter();
+  const [isChecking, setIsChecking] = useState(true); // State to manage checking authorization
 
   useEffect(() => {
-    // Redirect to login if not authenticated
+    if (status === 'loading') return; // Wait until session is loaded
+
     if (status === 'unauthenticated') {
       router.push('/auth/signin');
+      return;
     }
 
-    // Check if the user is authenticated but not authorized
     if (status === 'authenticated' && session) {
       const allowedPages = session.user?.allowedPages || [];
       const currentPage = 'protected'; // Set this to the current page you are protecting
 
-      // If the user does not have access to the current page, redirect
       if (!allowedPages.includes(currentPage)) {
         router.push('/unauthorized'); // Redirect to an unauthorized access page
+        return;
       }
+
+      // Set checking to false once all checks are done
+      setIsChecking(false);
     }
   }, [status, session, router]);
 
-  if (status === 'loading') {
+  // Render a loading state while checking the user's authorization
+  if (status === 'loading' || isChecking) {
     return <div>Loading...</div>;
   }
 
+  // If session is undefined or user is not authorized, render nothing
   if (!session) {
-    return null; // Render nothing if there is no session (user not authenticated)
+    return null;
   }
 
   // Authorized content for logged-in users
