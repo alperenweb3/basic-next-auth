@@ -2,7 +2,7 @@ import { createUser, findUserByEmail } from 'models/User';
 import { NextResponse } from 'next/server';
 
 export async function POST(req: Request) {
-  const { email, password } = await req.json();
+  const { name, email, password } = await req.json();
 
   const existingUser = await findUserByEmail(email);
   if (existingUser) {
@@ -12,6 +12,6 @@ export async function POST(req: Request) {
     );
   }
 
-  await createUser(email, password);
+  await createUser(name, email, password);
   return NextResponse.json({ message: 'User created' }, { status: 201 });
 }

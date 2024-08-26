@@ -5,6 +5,7 @@ import { Schema, Document, models, model } from 'mongoose';
 
 // Define the User interface extending Mongoose's Document
 interface IUser extends Document {
+  name: string;
   email: string;
   password: string;
   createdAt: Date;
@@ -12,6 +13,10 @@ interface IUser extends Document {
 
 // Define the User schema using Mongoose
 const UserSchema: Schema = new Schema<IUser>({
+  name: {
+    type: String,
+    required: true,
+  },
   email: {
     type: String,
     required: true,
@@ -31,11 +36,16 @@ const UserSchema: Schema = new Schema<IUser>({
 const User = models.User || model<IUser>('User', UserSchema);
 
 // Function to create a new user
-export async function createUser(email: string, password: string) {
+export async function createUser(
+  name: string,
+  email: string,
+  password: string,
+) {
   await connectToDatabase();
 
   const hashedPassword = await bcrypt.hash(password, 10);
   const user = new User({
+    name,
     email,
     password: hashedPassword,
   });

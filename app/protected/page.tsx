@@ -26,9 +26,13 @@ export default function Dashboard() {
   // Authorized content for logged-in users
   return (
     <div>
-      <h1>Welcome to the Protected Page</h1>
+      <h1>
+        Welcome to the Protected Page{' '}
+        {session.user?.name ? session.user.name : 'undefined'}
+      </h1>
       <p>
-        Your Username is {session.user?.name ? session.user.name : 'undefined'}
+        Your Username is{' '}
+        {session.user?.email ? session.user.email : 'undefined'}
       </p>
       <p>This content is protected and only visible to authorized users.</p>
     </div>
