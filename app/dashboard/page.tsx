@@ -84,46 +84,78 @@ export default function Dashboard() {
 
   // Render a loading state or nothing while checking authentication and authorization
   if (status === 'loading' || loading) {
-    return <div>Loading...</div>;
+    return (
+      <div className="flex justify-center items-center min-h-screen">
+        <div className="text-center">
+          <div
+            className="spinner-border animate-spin inline-block w-8 h-8 border-4 rounded-full"
+            role="status"
+          >
+            <span className="visually-hidden">Loading...</span>
+          </div>
+          <p>Loading...</p>
+        </div>
+      </div>
+    );
   }
 
   return (
-    <div className="p-24">
-      <h1>Dashboard</h1>
-      <table className="w-full">
-        <thead>
-          <tr className="text-left">
-            <th>Name</th>
-            <th>Email</th>
-            <th>Allowed Pages</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          {users.map((user) => (
-            <tr key={user.email}>
-              <td>{user.name}</td>
-              <td>{user.email}</td>
-              <td>{user.allowedPages.join(', ')}</td>
-              <td>
-                <button
-                  onClick={() =>
-                    handlePermissionChange(user.email, ['protected'])
-                  }
-                >
-                  Grant Access to Protected Page
-                </button>
-                <button
-                  className="pl-5"
-                  onClick={() => handlePermissionChange(user.email, [])}
-                >
-                  Revoke All Access
-                </button>
-              </td>
+    <div className="p-8">
+      <h1 className="text-3xl font-bold mb-6">Admin Dashboard</h1>
+      <div className="overflow-x-auto">
+        <table className="min-w-full bg-white border border-gray-200 shadow-md rounded-lg">
+          <thead className="bg-gray-200">
+            <tr>
+              <th className="py-3 px-6 text-left font-medium text-gray-600 uppercase tracking-wider">
+                Name
+              </th>
+              <th className="py-3 px-6 text-left font-medium text-gray-600 uppercase tracking-wider">
+                Email
+              </th>
+              <th className="py-3 px-6 text-left font-medium text-gray-600 uppercase tracking-wider">
+                Allowed Pages
+              </th>
+              <th className="py-3 px-6 text-left font-medium text-gray-600 uppercase tracking-wider">
+                Actions
+              </th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {users.map((user, index) => (
+              <tr
+                key={user.email}
+                className={index % 2 === 0 ? 'bg-white' : 'bg-gray-50'}
+              >
+                <td className="py-4 px-6 border-b border-gray-200">
+                  {user.name}
+                </td>
+                <td className="py-4 px-6 border-b border-gray-200">
+                  {user.email}
+                </td>
+                <td className="py-4 px-6 border-b border-gray-200">
+                  {user.allowedPages.join(', ')}
+                </td>
+                <td className="py-4 px-6 border-b border-gray-200">
+                  <button
+                    onClick={() =>
+                      handlePermissionChange(user.email, ['protected'])
+                    }
+                    className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition-colors duration-300 mr-2"
+                  >
+                    Grant Access
+                  </button>
+                  <button
+                    onClick={() => handlePermissionChange(user.email, [])}
+                    className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 transition-colors duration-300"
+                  >
+                    Revoke Access
+                  </button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 }

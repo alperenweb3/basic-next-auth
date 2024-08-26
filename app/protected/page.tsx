@@ -43,16 +43,20 @@ export default function ProtectedPage() {
 
   // Authorized content for logged-in users
   return (
-    <div>
-      <h1>
-        Welcome to the Protected Page{' '}
-        {session.user?.name ? session.user.name : 'undefined'}
-      </h1>
-      <p>
-        Your Username is{' '}
-        {session.user?.email ? session.user.email : 'undefined'}
-      </p>
-      <p>This content is protected and only visible to authorized users.</p>
+    <div className="flex-grow flex flex-col">
+      <section className="flex-grow flex items-center justify-center bg-gray-100">
+        <div className="text-center">
+          <h1 className="text-4xl font-bold mb-4">
+            Welcome to the Protected Page!
+            <p>{session.user?.name ? session.user.name : 'undefined'}</p>
+          </h1>
+          <p className="text-xl mb-8">
+            Your Username is{' '}
+            {session.user?.email ? session.user.email : 'undefined'}
+          </p>
+          <p>This content is protected and only visible to authorized users.</p>
+        </div>
+      </section>
     </div>
   );
 }
