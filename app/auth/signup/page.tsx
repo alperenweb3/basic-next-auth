@@ -1,14 +1,17 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, ChangeEvent } from 'react';
 import { useRouter } from 'next/navigation';
 import { useSession } from 'next-auth/react';
+import Link from 'next/link';
 
 export default function SignUp() {
   const { data: session } = useSession();
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [passwordError, setPasswordError] = useState('');
   const router = useRouter();
 
   useEffect(() => {
@@ -19,6 +22,12 @@ export default function SignUp() {
 
   const handleSubmit = async (e: { preventDefault: () => void }) => {
     e.preventDefault();
+
+    if (password !== confirmPassword) {
+      setPasswordError('Passwords do not match');
+      return;
+    }
+
     const res = await fetch('/api/auth/signup', {
       method: 'POST',
       headers: {
@@ -32,6 +41,16 @@ export default function SignUp() {
     } else {
       alert('Signup failed');
     }
+  };
+
+  const handlePasswordChange = (e: ChangeEvent<HTMLInputElement>) => {
+    setPassword(e.target.value);
+    setPasswordError(''); // Clear error when typing
+  };
+
+  const handleConfirmPasswordChange = (e: ChangeEvent<HTMLInputElement>) => {
+    setConfirmPassword(e.target.value);
+    setPasswordError(''); // Clear error when typing
   };
 
   return (
@@ -56,17 +75,25 @@ export default function SignUp() {
           className="w-full p-2 mb-4 border text-black"
           type="password"
           value={password}
-          onChange={(e) => setPassword(e.target.value)}
+          onChange={handlePasswordChange}
           placeholder="Password"
         />
+        <input
+          className="w-full p-2 mb-4 border text-black"
+          type="password"
+          value={confirmPassword}
+          onChange={handleConfirmPasswordChange}
+          placeholder="Confirm Password"
+        />
+        {passwordError && <p className="text-red-500 mb-4">{passwordError}</p>}
         <button className="w-full p-2 text-white bg-blue-500" type="submit">
           Sign Up
         </button>
         <p className="pt-5">
           Please{' '}
-          <a className="text-red-500" href="/auth/signin">
+          <Link className="text-red-500" href="/auth/signin">
             sign in
-          </a>{' '}
+          </Link>{' '}
           if you have an account
         </p>
       </form>

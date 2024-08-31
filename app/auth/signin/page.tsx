@@ -3,11 +3,14 @@
 import { signIn, useSession } from 'next-auth/react';
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 
 export default function SignIn() {
   const { data: session } = useSession();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [loginError, setLoginError] = useState('');
+
   const router = useRouter();
 
   useEffect(() => {
@@ -18,13 +21,19 @@ export default function SignIn() {
 
   const handleSubmit = async (e: { preventDefault: () => void }) => {
     e.preventDefault();
+
+    if (!email || !password) {
+      setLoginError('Please enter both email and password.');
+      return;
+    }
+
     const result = await signIn('credentials', {
       redirect: false,
       email,
       password,
     });
     if (result?.error) {
-      alert('Login failed');
+      setLoginError('Username or password is incorrect');
     } else {
       router.push('/');
     }
@@ -40,6 +49,7 @@ export default function SignIn() {
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           placeholder="Email"
+          aria-label="Email"
         />
         <input
           className="w-full p-2 mb-4 border text-black"
@@ -47,16 +57,19 @@ export default function SignIn() {
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           placeholder="Password"
+          aria-label="Password"
         />
+        {loginError && <p className="text-red-500 mb-4">{loginError}</p>}
+
         <button className="w-full p-2 text-white bg-blue-500" type="submit">
           Sign In
         </button>
         <p className="pt-5">
           Please{' '}
-          <a className="text-red-500" href="/auth/signup">
+          <Link className="text-red-500" href="/auth/signup">
             sign up
-          </a>{' '}
-          if you dont have an account
+          </Link>{' '}
+          if you don&apos;t have an account
         </p>
       </form>
     </div>
